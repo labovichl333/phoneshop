@@ -20,8 +20,11 @@ public class JdbcPhoneDao implements PhoneDao {
 
     private final static String SELECT_COLOR_ID_BY_PHONE_ID = "select colorId from phone2color where phoneId=?";
 
-    private final static String INSERT_INTO_PHONES = "insert into phones values(?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
-            " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final static String INSERT_INTO_PHONES = "insert into phones (id, brand, model, price, displaySizeInches," +
+            " weightGr, lengthMm, widthMm, heightMm, announced, deviceType, os, displayResolution, pixelDensity, " +
+            "displayTechnology, backCameraMegapixels, frontCameraMegapixels, ramGb, internalStorageGb," +
+            " batteryCapacityMah, talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl," +
+            " description) values(?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final static String INSERT_INTO_PHONE2COLOR = "insert into phone2color (phoneId, colorId) values (?, ?)";
 

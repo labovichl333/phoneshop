@@ -50,7 +50,7 @@ public class JdbcPhoneDao implements PhoneDao {
         jdbcTemplate.batchUpdate(INSERT_INTO_PHONE2COLOR,
                 phone.getColors(), phone.getColors().size(), (preparedStatement, color) -> {
                     preparedStatement.setLong(1, phone.getId());
-                    preparedStatement.setLong(1, color.getId());
+                    preparedStatement.setLong(2, color.getId());
                 });
     }
 

@@ -2,11 +2,9 @@ package com.es.core.cart;
 
 import com.es.core.model.phone.Phone;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public class CartItem {
     private final Phone phone;

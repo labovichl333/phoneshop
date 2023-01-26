@@ -19,7 +19,6 @@ public class HttpSessionCartService implements CartService {
 
     private final PhoneDao phoneDao;
 
-
     @Override
     public Cart getCart(HttpSession session) {
 

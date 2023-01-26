@@ -27,16 +27,16 @@
         <td>Image</td>
         <td>
             Brand
-            <tags:sortLink pagePath="/productList/1" sort="brand" order="asc" value="&#9650;"></tags:sortLink>
-            <tags:sortLink pagePath="/productList/1" sort="brand" order="desc" value="&#9660;"></tags:sortLink>
+            <tags:sortLink pagePath="/productList/1" sort="BRAND" order="ASC" value="&#9650;"></tags:sortLink>
+            <tags:sortLink pagePath="/productList/1" sort="BRAND" order="DESC" value="&#9660;"></tags:sortLink>
         </td>
         <td>Model</td>
         <td>Color</td>
         <td>Display size</td>
         <td>
             Price
-            <tags:sortLink pagePath="/productList/1" sort="price" order="asc" value="&#9650;"></tags:sortLink>
-            <tags:sortLink pagePath="/productList/1" sort="price" order="desc" value="&#9660;"></tags:sortLink>
+            <tags:sortLink pagePath="/productList/1" sort="PRICE" order="ASC" value="&#9650;"></tags:sortLink>
+            <tags:sortLink pagePath="/productList/1" sort="PRICE" order="DESC" value="&#9660;"></tags:sortLink>
         </td>
         <td>Quantity</td>
         <td>Action</td>

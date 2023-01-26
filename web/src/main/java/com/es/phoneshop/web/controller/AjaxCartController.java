@@ -5,6 +5,7 @@ import com.es.core.cart.CartService;
 import com.es.core.exception.PhoneOutOfStockException;
 import com.es.phoneshop.web.controller.pages.dto.AddToCartDto;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,20 +25,18 @@ public class AjaxCartController {
     private CartService cartService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public String addPhone(@Valid AddToCartDto addToCartDto, BindingResult br,
-                           HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<String> addPhone(@Valid AddToCartDto addToCartDto, BindingResult br,
+                                           HttpSession session, HttpServletResponse response) {
         if (br.hasErrors()) {
-            response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
-            return WRONG_FORMAT_MESSAGE;
+            return new ResponseEntity<>(WRONG_FORMAT_MESSAGE, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         Cart cart = cartService.getCart(session);
         try {
             cartService.addPhone(cart, addToCartDto.getPhoneId(),
                     addToCartDto.getQuantity());
         } catch (PhoneOutOfStockException e) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            return OUT_OF_STOCK_MESSAGE;
+            return new ResponseEntity<>(OUT_OF_STOCK_MESSAGE, HttpStatus.BAD_REQUEST);
         }
-        return cart.getTotalQuantity() + " items " + cart.getTotalCost();
+        return new ResponseEntity<>(cart.getTotalQuantity() + " items " + cart.getTotalCost(), HttpStatus.OK);
     }
 }

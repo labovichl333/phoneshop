@@ -10,7 +10,7 @@ public interface PhoneDao {
 
     List<Phone> findAll(int offset, int limit);
 
-    List<Phone> findPhonesInStock(String query, String sortField, String sortOrder, int offset, int limit);
+    List<Phone> findPhonesInStock(String query, SortField sortField, SortOrder sortOrder, int offset, int limit);
 
     int getInStockQuantity(long phoneId);
 

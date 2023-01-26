@@ -1,6 +1,6 @@
 package com.es.core.model.phone;
 
-import com.es.core.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -78,13 +78,13 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     @Override
-    public List<Phone> findPhonesInStock(String query, String sortField, String sortOrder, int offset, int limit) {
+    public List<Phone> findPhonesInStock(String query, SortField sortField, SortOrder sortOrder, int offset, int limit) {
 
         StringBuilder sqlQuery = new StringBuilder(SELECT_ALL_IN_STOCK_AND_NOT_NULL_PRICE);
-        if (!StringUtil.isBlank(query)) {
+        if (!StringUtils.isBlank(query)) {
             sqlQuery.append(SEARCH_PART).append(query.trim().toLowerCase()).append("%'");
         }
-        if (!StringUtil.isBlank(sortField)) {
+        if (!(sortField == null)) {
             sqlQuery.append(SORT_PART).append(sortField).append(" ").append(sortOrder);
         }
         sqlQuery.append(LIMIT_PART).append(limit).append(OFFSET_PART).append(offset);
@@ -99,7 +99,7 @@ public class JdbcPhoneDao implements PhoneDao {
     @Override
     public long getQuantityOfPhonesInStock(String query) {
         StringBuilder sqlQuery = new StringBuilder(SELECT_IN_STOCK_PHONES_COUNT);
-        if (!StringUtil.isBlank(query)) {
+        if (!StringUtils.isBlank(query)) {
             sqlQuery.append(SEARCH_PART).append(query.trim().toLowerCase()).append("%'");
         }
         return jdbcTemplate.queryForObject(sqlQuery.toString(), Long.class);
@@ -107,7 +107,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     @Override
     public int getInStockQuantity(long phoneId) {
-        return jdbcTemplate.queryForObject(SELECT_PHONE_QUANTITY_IN_STOCK_BY_ID, Integer.class,phoneId);
+        return jdbcTemplate.queryForObject(SELECT_PHONE_QUANTITY_IN_STOCK_BY_ID, Integer.class, phoneId);
     }
 
     private void setPhoneColors(Phone phone) {

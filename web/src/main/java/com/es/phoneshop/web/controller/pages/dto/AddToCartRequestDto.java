@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddToCartDto {
+public class AddToCartRequestDto {
     private Long phoneId;
 
     @Min(1)

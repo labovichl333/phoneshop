@@ -5,6 +5,14 @@ import java.util.Optional;
 
 public interface PhoneDao {
     Optional<Phone> get(Long key);
+
     void save(Phone phone);
+
     List<Phone> findAll(int offset, int limit);
+
+    List<Phone> findPhonesInStock(String query, SortField sortField, SortOrder sortOrder, int offset, int limit);
+
+    int getInStockQuantity(long phoneId);
+
+    long getQuantityOfPhonesInStock(String query);
 }

@@ -1,5 +1,6 @@
 package com.es.core.model.phone;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,8 @@ public class JdbcPhoneDao implements PhoneDao {
 
     private final static String SELECT_COLOR_ID_BY_PHONE_ID = "select colorId from phone2color where phoneId=?";
 
+    private final static String SELECT_PHONE_QUANTITY_IN_STOCK_BY_ID = "select stock from stocks where phoneId=?";
+
     private final static String INSERT_INTO_PHONES = "insert into phones (id, brand, model, price, displaySizeInches," +
             " weightGr, lengthMm, widthMm, heightMm, announced, deviceType, os, displayResolution, pixelDensity, " +
             "displayTechnology, backCameraMegapixels, frontCameraMegapixels, ramGb, internalStorageGb," +
@@ -28,9 +31,19 @@ public class JdbcPhoneDao implements PhoneDao {
 
     private final static String INSERT_INTO_PHONE2COLOR = "insert into phone2color (phoneId, colorId) values (?, ?)";
 
+    private static final String SELECT_ALL_IN_STOCK_AND_NOT_NULL_PRICE = "select * from phones, stocks" +
+            " where phones.id = stocks.phoneId and stocks.stock > 0 and phones.price is not null";
+    private static final String SEARCH_PART = " and lower(phones.model) like '%";
+    private static final String SORT_PART = " order by ";
+    private static final String SELECT_IN_STOCK_PHONES_COUNT = "select count(*) from phones, stocks" +
+            " where phones.id = stocks.phoneId and stocks.stock > 0 and phones.price is not null";
+    private static final String LIMIT_PART = " limit ";
+    private static final String OFFSET_PART = " offset ";
+
 
     @Resource
     private JdbcTemplate jdbcTemplate;
+
 
     public Optional<Phone> get(final Long key) {
         Optional<Phone> phone = Optional.ofNullable(
@@ -62,6 +75,39 @@ public class JdbcPhoneDao implements PhoneDao {
                 new BeanPropertyRowMapper(Phone.class), offset, limit);
         phones.forEach(this::setPhoneColors);
         return phones;
+    }
+
+    @Override
+    public List<Phone> findPhonesInStock(String query, SortField sortField, SortOrder sortOrder, int offset, int limit) {
+
+        StringBuilder sqlQuery = new StringBuilder(SELECT_ALL_IN_STOCK_AND_NOT_NULL_PRICE);
+        if (!StringUtils.isBlank(query)) {
+            sqlQuery.append(SEARCH_PART).append(query.trim().toLowerCase()).append("%'");
+        }
+        if (!(sortField == null)) {
+            sqlQuery.append(SORT_PART).append(sortField).append(" ").append(sortOrder);
+        }
+        sqlQuery.append(LIMIT_PART).append(limit).append(OFFSET_PART).append(offset);
+
+
+        List<Phone> phonesInStock = jdbcTemplate.query(sqlQuery.toString(), new BeanPropertyRowMapper<>(Phone.class));
+
+        phonesInStock.forEach(this::setPhoneColors);
+        return phonesInStock;
+    }
+
+    @Override
+    public long getQuantityOfPhonesInStock(String query) {
+        StringBuilder sqlQuery = new StringBuilder(SELECT_IN_STOCK_PHONES_COUNT);
+        if (!StringUtils.isBlank(query)) {
+            sqlQuery.append(SEARCH_PART).append(query.trim().toLowerCase()).append("%'");
+        }
+        return jdbcTemplate.queryForObject(sqlQuery.toString(), Long.class);
+    }
+
+    @Override
+    public int getInStockQuantity(long phoneId) {
+        return jdbcTemplate.queryForObject(SELECT_PHONE_QUANTITY_IN_STOCK_BY_ID, Integer.class, phoneId);
     }
 
     private void setPhoneColors(Phone phone) {

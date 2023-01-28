@@ -3,17 +3,18 @@ package com.es.phoneshop.web.controller.validation;
 import com.es.core.model.phone.PhoneDao;
 import com.es.phoneshop.web.controller.pages.dto.AddToCartRequestDto;
 import com.es.phoneshop.web.controller.pages.dto.UpdateCartDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class AddToCartRequestDtoValidator implements Validator {
-    @Resource
-    PhoneDao phoneDao;
+
+    private final PhoneDao phoneDao;
 
     @Override
     public boolean supports(Class<?> aClass) {

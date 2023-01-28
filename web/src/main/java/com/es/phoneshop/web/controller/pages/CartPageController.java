@@ -5,6 +5,7 @@ import com.es.core.cart.CartService;
 import com.es.phoneshop.web.controller.pages.dto.AddToCartRequestDto;
 import com.es.phoneshop.web.controller.pages.dto.UpdateCartDto;
 import com.es.phoneshop.web.controller.validation.AddToCartRequestDtoValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,11 +22,12 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/cart")
+@RequiredArgsConstructor
 public class CartPageController {
-    @Resource
-    private CartService cartService;
-    @Resource
-    private AddToCartRequestDtoValidator validator;
+
+    private final CartService cartService;
+
+    private final AddToCartRequestDtoValidator validator;
 
     @RequestMapping(method = RequestMethod.GET)
     public String getCart(Model model, HttpSession session) {

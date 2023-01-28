@@ -12,8 +12,11 @@
 <body>
 <p><a href="#">Login</a></p>
 <p>
-    My cart: <span id="cartState">${cart.totalQuantity} items ${cart.totalCost}</span>$
+    <a href="${pageContext.request.contextPath}/cart">My cart: <span
+            id="cartState">${cart.totalQuantity} items ${cart.totalCost}</span>$</a>
+
 </p>
+
 <p>
 <form action="${pageContext.servletContext.contextPath}/productList/1">
     <input type="text" name="query" value="${param.query}">
@@ -42,6 +45,7 @@
         <td>Action</td>
     </tr>
     </thead>
+
     <c:forEach var="phone" items="${phones}">
         <tr>
             <td>
@@ -50,8 +54,7 @@
             <td>${phone.brand}</td>
             <td>${phone.model}</td>
             <td>
-                <c:set var="colors" value=""></c:set>
-                <c:forEach  var="color" items="${phone.colors}">
+                <c:forEach var="color" items="${phone.colors}">
                     ${color.code},
                 </c:forEach>
             </td>
@@ -65,29 +68,33 @@
                 <div class="error" id="${phone.id}error"></div>
             </td>
             <td>
-                <button type="button" onclick="addToCartForm(${phone.id},'${pageContext.servletContext.contextPath}/ajaxCart')">
+                <button type="button"
+                        onclick="addToCartForm(${phone.id},'${pageContext.servletContext.contextPath}/ajaxCart')">
                     Add to cart
                 </button>
-                </td>
+            </td>
         </tr>
     </c:forEach>
 </table>
 </p>
 
-<div class="pagination">
-    <c:set var="prevPage" value="${pageNumber == 1 ? pageNumber : pageNumber - 1}"/>
+<c:if test="${lastPage>1}">
 
-    <a href="${pageContext.request.contextPath}/productList/${prevPage}?query=${param.query}&sortField=${param.sortField}&sortOrder=${param.orderField}">&laquo;</a>
+    <div class="pagination">
+        <c:set var="prevPage" value="${pageNumber == 1 ? pageNumber : pageNumber - 1}"/>
 
-    <c:forEach var="page" items="${pages}">
-        <a class="${pageNumber==page? 'active':''}"
-           href="${pageContext.request.contextPath}/productList/${page}?query=${param.query}&sortField=${param.sortField}&sortOrder=${param.orderField}">${page}</a>
-    </c:forEach>
+        <a href="${pageContext.request.contextPath}/productList/${prevPage}?query=${param.query}&sortField=${param.sortField}&sortOrder=${param.orderField}">&laquo;</a>
 
-    <c:set var="nextPage" value="${pageNumber == lastPage ? pageNumber : pageNumber + 1}"/>
-    <a href="${pageContext.request.contextPath}/productList/${nextPage}?query=${param.query}&sortField=${param.sortField}&sortOrder=${param.orderField}">&raquo;</a>
+        <c:forEach var="page" items="${pages}">
+            <a class="${pageNumber==page? 'active':''}"
+               href="${pageContext.request.contextPath}/productList/${page}?query=${param.query}&sortField=${param.sortField}&sortOrder=${param.orderField}">${page}</a>
+        </c:forEach>
 
-</div>
+        <c:set var="nextPage" value="${pageNumber == lastPage ? pageNumber : pageNumber + 1}"/>
+        <a href="${pageContext.request.contextPath}/productList/${nextPage}?query=${param.query}&sortField=${param.sortField}&sortOrder=${param.orderField}">&raquo;</a>
+    </div>
+
+</c:if>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="${pageContext.servletContext.contextPath}/js/main.js"></script>

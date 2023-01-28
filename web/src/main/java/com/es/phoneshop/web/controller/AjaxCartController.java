@@ -34,7 +34,7 @@ public class AjaxCartController {
         Cart cart = cartService.getCart(session);
         try {
             cartService.addPhone(cart, addToCartRequestDto.getPhoneId(),
-                    addToCartRequestDto.getQuantity());
+                    Long.valueOf(addToCartRequestDto.getQuantity()));
         } catch (PhoneOutOfStockException e) {
             return new ResponseEntity<>(new ExeptionDto(OUT_OF_STOCK_MESSAGE), HttpStatus.BAD_REQUEST);
         }
@@ -42,7 +42,7 @@ public class AjaxCartController {
     }
 
 
-    private AddToCartResponseDto mapCartToDto(Cart cart){
+    private AddToCartResponseDto mapCartToDto(Cart cart) {
         return AddToCartResponseDto.builder()
                 .totalCost(cart.getTotalCost())
                 .totalQuantity(cart.getTotalQuantity())

@@ -16,14 +16,22 @@
 </p>
 <p><a href="${pageContext.request.contextPath}/productList/1">Back to product list</a></p>
 <p>
+
 </p>
 <p>
+</p>
+<p>
+<p class="error">
+    <c:if test="${error_message!=null}">
+        ${error_message}
+    </c:if>
+</p>
 <table border="1px">
     <thead>
     <tr>
         <td>Image</td>
         <td>
-            Brandа
+            Brand
         </td>
         <td>Model</td>
         <td>Color</td>
@@ -75,8 +83,8 @@
     </form:form>
 </table>
 </p>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="${pageContext.servletContext.contextPath}/js/main.js"></script>
+<form action="${pageContext.request.contextPath}/order" method="post">
+    <button type="submit" >Order</button>
+</form>
 </body>
 </html>

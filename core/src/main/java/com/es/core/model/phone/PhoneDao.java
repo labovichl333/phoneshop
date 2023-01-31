@@ -15,4 +15,6 @@ public interface PhoneDao {
     int getInStockQuantity(long phoneId);
 
     long getQuantityOfPhonesInStock(String query);
+
+    void decreaseStockQuantity(Long phoneId, Long quantity);
 }

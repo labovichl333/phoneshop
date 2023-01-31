@@ -1,17 +1,18 @@
 package com.es.core.model.phone;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class JdbcPhoneDao implements PhoneDao {
     private final static String SELECT_PHONE_BY_ID = "select * from phones where id=?";
 
@@ -31,6 +32,8 @@ public class JdbcPhoneDao implements PhoneDao {
 
     private final static String INSERT_INTO_PHONE2COLOR = "insert into phone2color (phoneId, colorId) values (?, ?)";
 
+    private final static String UPDATE_STOCK_QUANTITY = "update stocks set stock=? where phoneId=?";
+
     private static final String SELECT_ALL_IN_STOCK_AND_NOT_NULL_PRICE = "select * from phones, stocks" +
             " where phones.id = stocks.phoneId and stocks.stock > 0 and phones.price is not null";
     private static final String SEARCH_PART = " and lower(phones.model) like '%";
@@ -41,8 +44,7 @@ public class JdbcPhoneDao implements PhoneDao {
     private static final String OFFSET_PART = " offset ";
 
 
-    @Resource
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
 
     public Optional<Phone> get(final Long key) {
@@ -108,6 +110,12 @@ public class JdbcPhoneDao implements PhoneDao {
     @Override
     public int getInStockQuantity(long phoneId) {
         return jdbcTemplate.queryForObject(SELECT_PHONE_QUANTITY_IN_STOCK_BY_ID, Integer.class, phoneId);
+    }
+
+    @Override
+    public void decreaseStockQuantity(Long phoneId, Long quantity) {
+        long actualStock = getInStockQuantity(phoneId) - quantity;
+        jdbcTemplate.update(UPDATE_STOCK_QUANTITY, actualStock, phoneId);
     }
 
     private void setPhoneColors(Phone phone) {

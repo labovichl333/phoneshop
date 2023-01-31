@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -66,5 +65,6 @@ public class CartPageController {
         UpdateCartDto dto = new UpdateCartDto(dtoElement);
         return dto;
     }
+
 
 }

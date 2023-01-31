@@ -80,6 +80,13 @@ public class HttpSessionCartService implements CartService {
         }
     }
 
+    @Override
+    public void clearCart(HttpSession session) {
+        synchronized (session) {
+            session.removeAttribute(CART_SESSION_ATTRIBUTE);
+        }
+    }
+
     private void recalculateCart(Cart cart) {
         cart.setTotalQuantity(cart.getItems().stream()
                 .map(CartItem::getQuantity)

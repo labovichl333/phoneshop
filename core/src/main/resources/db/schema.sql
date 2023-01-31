@@ -2,6 +2,30 @@ drop table if exists phone2color;
 drop table if exists colors;
 drop table if exists stocks;
 drop table if exists phones;
+drop table if exists orders;
+drop table if exists orderItems;
+
+create table orders (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    secureId VARCHAR(36),
+    subtotal FLOAT,
+    deliveryPrice FLOAT,
+    totalPrice FLOAT,
+    firstName VARCHAR(50),
+    lastName VARCHAR(50),
+    deliveryAddress VARCHAR(100),
+    contactPhoneNo VARCHAR(15),
+    additionalInformation VARCHAR(500),
+    status VARCHAR(10),
+    UNIQUE (secureId)
+);
+
+create table orderItems (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    phoneId BIGINT NOT NULL,
+    orderId BIGINT NOT NULL,
+    quantity SMALLINT NOT NULL,
+);
 
 create table colors (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,

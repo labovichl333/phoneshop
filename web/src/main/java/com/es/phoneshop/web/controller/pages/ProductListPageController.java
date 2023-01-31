@@ -42,7 +42,7 @@ public class ProductListPageController {
     @RequestMapping(method = RequestMethod.GET, path = "/{pageNumber}")
     public String showProductList(Model model, @PathVariable int pageNumber,
                                   @RequestParam(required = false) String query,
-                                  @RequestParam(required = false)SortField sortField,
+                                  @RequestParam(required = false) SortField sortField,
                                   @RequestParam(required = false) SortOrder sortOrder,
                                   HttpSession session) {
         int offset = PHONES_ON_ONE_PAGE_LIMIT * (pageNumber - 1);

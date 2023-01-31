@@ -12,6 +12,7 @@ import java.util.List;
 public class Order
 {
     private Long id;
+    private String secureId;
     private List<OrderItem> orderItems;
     /**
      *  A sum of order item prices;
@@ -29,5 +30,7 @@ public class Order
     private String contactPhoneNo;
 
     private OrderStatus status;
+
+    private String additionalInformation;
 
 }

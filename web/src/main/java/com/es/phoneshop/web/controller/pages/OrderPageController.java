@@ -23,12 +23,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderPageController {
 
-    private static final String ERROE_MESSAGE_ATRIBUTE="error_message";
-    private static final String ERROE_MESSAGE="Not enough phones in stock, cart has been updated for valid values";
-    private static final String CART_ATRIBUTE="cart";
-    private static final String CART_ITEMS_ATRIBUTE="cartItems";
-    private static final String CART_PAGE="cart";
-    private static final String REDIRECT_TO_ORDER_OVERVIEW="redirect:/orderOverview/";
+    private static final String ERROE_MESSAGE_ATRIBUTE = "error_message";
+    private static final String ERROE_MESSAGE = "Not enough phones in stock, cart has been updated for valid values";
+    private static final String CART_ATRIBUTE = "cart";
+    private static final String CART_ITEMS_ATRIBUTE = "cartItems";
+    private static final String CART_PAGE = "cart";
+    private static final String REDIRECT_TO_ORDER_OVERVIEW = "redirect:/orderOverview/";
     private final OrderService orderService;
     private final CartService cartService;
 

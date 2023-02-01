@@ -24,6 +24,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CartPageController {
 
+    private static final String CART_ATTRIBUTE="cart";
+
+    private static final String CART_ITEMS_ATTRIBUTE="cartItems";
+
+    private static final String CART_PAGE="cart";
+
+    private static final String REDIRECT_TO_CART="redirect:/cart";
+
+
     private final CartService cartService;
 
     private final AddToCartRequestDtoValidator validator;
@@ -31,30 +40,30 @@ public class CartPageController {
     @RequestMapping(method = RequestMethod.GET)
     public String getCart(Model model, HttpSession session) {
         Cart cart = cartService.getCart(session);
-        model.addAttribute("cart", cart);
-        model.addAttribute("cartItems", mapCartItemsToDto(cart));
-        return "cart";
+        model.addAttribute(CART_ATTRIBUTE, cart);
+        model.addAttribute(CART_ITEMS_ATTRIBUTE, mapCartItemsToDto(cart));
+        return CART_PAGE;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public String updateCart(@Valid @ModelAttribute("cartItems") UpdateCartDto updateCartDto,
-                             BindingResult br, HttpSession session, Model model) {
+                             BindingResult br, HttpSession session) {
         validator.validate(updateCartDto, br);
         if (br.hasErrors()) {
-            return "cart";
+            return CART_PAGE;
         }
         Cart cart = cartService.getCart(session);
         updateCartDto.getCartItems()
                 .forEach(crtItem -> cartService.update(cart, crtItem.getPhoneId(), Long.valueOf(crtItem.getQuantity())));
-        return "redirect:/cart";
+        return REDIRECT_TO_CART;
     }
 
     @RequestMapping(value = "/delete/{phoneId}", method = RequestMethod.DELETE)
     public String deleteCartItem(Model model, HttpSession session, @PathVariable Long phoneId) {
         Cart cart = cartService.getCart(session);
         cartService.remove(cart, phoneId);
-        model.addAttribute("cartItems", cart.getItems());
-        return "redirect:/cart";
+        model.addAttribute(CART_ITEMS_ATTRIBUTE, cart.getItems());
+        return REDIRECT_TO_CART;
     }
 
 

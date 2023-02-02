@@ -8,7 +8,7 @@
     <meta charset="utf-8">
 </head>
 <body>
-<p><a href="#">Login</a></p>
+<tags:login/>
 <p>
 <form action="${pageContext.servletContext.contextPath}/productList/1">
     <input type="text" name="query" value="${param.query}">

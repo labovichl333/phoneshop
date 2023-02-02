@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/main.css">
 </head>
 <body>
-<p><a href="#">Login</a></p>
+<tags:login/>
 <p>
     <a href="${pageContext.request.contextPath}/cart">My cart: <span
             id="cartState">${cart.totalQuantity} items ${cart.totalCost}</span>$</a>

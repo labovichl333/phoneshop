@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,6 +66,7 @@ public class OrderServiceImpl implements OrderService {
             }
             order.setStatus(OrderStatus.NEW);
             order.setSecureId(UUID.randomUUID().toString());
+            order.setCreatedDate(LocalDateTime.now());
             orderDao.save(order);
             cartService.clearCart(httpSession);
         }

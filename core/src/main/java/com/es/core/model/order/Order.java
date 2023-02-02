@@ -5,17 +5,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order
-{
+public class Order {
     private Long id;
     private String secureId;
     private List<OrderItem> orderItems;
     /**
-     *  A sum of order item prices;
+     * A sum of order item prices;
      */
     private BigDecimal subtotal;
     private BigDecimal deliveryPrice;
@@ -32,5 +33,7 @@ public class Order
     private OrderStatus status;
 
     private String additionalInformation;
+
+    private LocalDateTime createdDate;
 
 }

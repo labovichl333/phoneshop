@@ -17,6 +17,7 @@ create table orders (
     contactPhoneNo VARCHAR(15),
     additionalInformation VARCHAR(500),
     status VARCHAR(10),
+    createdDate TIMESTAMP,
     UNIQUE (secureId)
 );
 

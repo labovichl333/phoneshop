@@ -105,11 +105,11 @@
 <form>
     <input type="button" value="Back" onClick='location.href="${pageContext.request.contextPath}/admin/orders"'>
 </form>
-<form method="post" action="${pageContext.request.contextPath}/admin/orders/${order.id}">
+<form method="post" action="${pageContext.request.contextPath}/admin/orders/orderStatus/${order.id}">
     <input type="hidden" value="DELIVERED" name="orderStatus">
     <input type="submit" value="Delivered">
 </form>
-<form method="post" action="${pageContext.request.contextPath}/admin/orders/${order.id}">
+<form method="post" action="${pageContext.request.contextPath}/admin/orders/orderStatus/${order.id}">
     <input type="hidden" value="REJECTED" name="orderStatus">
     <input type="submit" value="Rejected">
 </form>

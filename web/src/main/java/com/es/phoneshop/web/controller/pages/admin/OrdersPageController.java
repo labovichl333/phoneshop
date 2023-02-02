@@ -42,7 +42,7 @@ public class OrdersPageController {
         return ADMIN_ORDER_INFO_PAGE;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/{orderNumber}")
+    @RequestMapping(method = RequestMethod.POST, path = "/orderStatus/{orderNumber}")
     public String changeOrderStatus(Model model, @PathVariable Long orderNumber, OrderStatus orderStatus) {
         orderDao.updateStatus(orderNumber, orderStatus);
         model.addAttribute(ORDER_INFO_ATTRIBUTE, orderDao.findById(orderNumber)

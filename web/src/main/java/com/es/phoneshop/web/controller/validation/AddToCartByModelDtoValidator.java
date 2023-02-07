@@ -1,6 +1,7 @@
 package com.es.phoneshop.web.controller.validation;
 
 import com.es.core.exception.PhoneNotFoundException;
+import com.es.core.exception.PhoneOutOfStockException;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
 import com.es.phoneshop.web.controller.pages.dto.AddToCartByModelDto;
@@ -35,82 +36,53 @@ public class AddToCartByModelDtoValidator implements Validator {
             if (isItemEmpty(curItem)) {
                 continue;
             }
-
-            Long validQuantity = processQuantity(curItem.getQuantity(), i, errors);
-
             String model;
-
             try {
-                model = processModel(curItem.getModel(), validQuantity, i, errors);
+                model = processModel(curItem, i, errors);
             } catch (PhoneNotFoundException e) {
                 errors.rejectValue("items[" + i + "].model", "", "Product not found");
                 continue;
+            } catch (PhoneOutOfStockException e) {
+                errors.rejectValue("items[" + i + "].quantity", "", "Quantity is out of stock");
+                continue;
             }
-
             curItem.setModel(model);
 
-            if(validQuantity!=null){
+            if (curItem.getQuantity() != null && curItem.getQuantity() > 1) {
                 setTrueValidFlag(curItem);
             }
 
-
-
         }
     }
 
-    private Long processQuantity(String quantity, int index, Errors errors) {
-        Long forReturn = null;
-        quantity = quantity.trim();
-        if (isQuantityEmpty(quantity)) {
-            errors.rejectValue("items[" + index + "].quantity", "", "Empty quantity");
-        } else {
-            try {
-                forReturn = Long.valueOf(quantity);
-            } catch (NumberFormatException e) {
-                errors.rejectValue("items[" + index + "].quantity", "", "Not a number");
-            }
-            if (forReturn != null && forReturn <= 0) {
-                forReturn=null;
-                errors.rejectValue("items[" + index + "].quantity", "", "Number must be positive");
-            }
-        }
-        return forReturn;
 
-    }
-
-    private String processModel(String model, Long quantity, int index, Errors errors) {
-        String forReturn = model.trim();
-
+    private String processModel(AddToCartByModelItemDto curItem, int index, Errors errors) {
+        String model = curItem.getModel().trim();
+        Long quantity = curItem.getQuantity();
         if (isModelEmpty(model)) {
             errors.rejectValue("items[" + index + "].model", "", "Empty model");
         } else {
             Phone phone = phoneDao.findPhoneByModel(model)
                     .orElseThrow(PhoneNotFoundException::new);
-
-            if (quantity != null && quantity > 0) {
+            if (quantity != null) {
                 long numOfPhones = phoneDao.getInStockQuantity(phone.getId());
                 if (quantity > numOfPhones) {
-                    errors.rejectValue("items[" + index + "].quantity", "", "Quantity is out of stock");
+                    throw new PhoneOutOfStockException();
                 }
             }
-
         }
-
-        return forReturn;
+        return model;
     }
 
 
     private boolean isItemEmpty(AddToCartByModelItemDto item) {
-        return StringUtils.isBlank(item.getModel()) && StringUtils.isBlank(item.getQuantity());
+        return StringUtils.isBlank(item.getModel()) && item.getQuantity() == null;
     }
 
     private boolean isModelEmpty(String model) {
         return StringUtils.isBlank(model);
     }
 
-    private boolean isQuantityEmpty(String quantity) {
-        return StringUtils.isBlank(quantity);
-    }
 
     private void setFalseValidFlag(AddToCartByModelItemDto item) {
         item.setValid(false);
@@ -119,8 +91,6 @@ public class AddToCartByModelDtoValidator implements Validator {
     private void setTrueValidFlag(AddToCartByModelItemDto item) {
         item.setValid(true);
     }
-
-
 
 
 }

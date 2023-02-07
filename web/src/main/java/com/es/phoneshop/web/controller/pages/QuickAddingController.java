@@ -7,7 +7,6 @@ import com.es.phoneshop.web.controller.pages.dto.AddToCartByModelDto;
 import com.es.phoneshop.web.controller.pages.dto.AddToCartByModelItemDto;
 import com.es.phoneshop.web.controller.validation.AddToCartByModelDtoValidator;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,41 +33,38 @@ public class QuickAddingController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String showQuickAddingPage(Model model) {
-        model.addAttribute("items",new AddToCartByModelDto());
+        model.addAttribute("items", new AddToCartByModelDto());
         return "quickAdd";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String addPhonesByModels(@ModelAttribute("items") AddToCartByModelDto addToCartByModelDto,
-                                    BindingResult br,Model model,HttpSession session) {
-        validator.validate(addToCartByModelDto,br);
-        if(br.hasErrors()){
-            model.addAttribute("errorsMessage","There were errors");
-        }else {
-            model.addAttribute("allSuccessMessage","All products added successfully");
+    public String addPhonesByModels(@ModelAttribute("items") @Valid AddToCartByModelDto addToCartByModelDto,
+                                    BindingResult br, Model model, HttpSession session) {
+        validator.validate(addToCartByModelDto, br);
+        if (br.hasErrors()) {
+            model.addAttribute("errorsMessage", "There were errors");
+        } else {
+            model.addAttribute("allSuccessMessage", "All products added successfully");
         }
-        System.out.println(addToCartByModelDto);
-
-        Cart cart=cartService.getCart(session);
-        List<String> productsWasAdd=new ArrayList<>();
+        Cart cart = cartService.getCart(session);
+        List<String> productsWasAdd = new ArrayList<>();
         addToCartByModelDto.getItems().stream()
                 .filter(AddToCartByModelItemDto::isValid)
-                .forEach(itemDto->{
-
-                    cartService.addPhone(cart,phoneDao.findPhoneByModel(itemDto.getModel()).get().getId(),
-                            Long.valueOf(itemDto.getQuantity()));
-                    productsWasAdd.add(itemDto.getModel()+" products added successfully");
+                .forEach(itemDto -> {
+                    cartService.addPhone(cart, phoneDao.findPhoneByModel(itemDto.getModel()).get().getId(),
+                            itemDto.getQuantity());
+                    productsWasAdd.add(itemDto.getModel() + " products added successfully");
                     clearDtoItem(itemDto);
                 });
 
-        model.addAttribute("productsWasAdd",productsWasAdd);
+        model.addAttribute("productsWasAdd", productsWasAdd);
 
         return "quickAdd";
     }
 
     private void clearDtoItem(AddToCartByModelItemDto itemDto) {
         itemDto.setModel("");
-        itemDto.setQuantity("");
+        itemDto.setQuantity(null);
     }
 
 }

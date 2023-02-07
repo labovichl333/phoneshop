@@ -16,6 +16,9 @@
             id="cartState">${cart.totalQuantity} items ${cart.totalCost}</span>$</a>
 
 </p>
+<p>
+    <a href="${pageContext.servletContext.contextPath}/quickAdd">Quick add to cart</a>
+</p>
 
 <p>
 <form action="${pageContext.servletContext.contextPath}/productList/1">

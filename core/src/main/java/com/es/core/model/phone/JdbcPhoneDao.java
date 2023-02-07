@@ -2,6 +2,7 @@ package com.es.core.model.phone;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JdbcPhoneDao implements PhoneDao {
     private final static String SELECT_PHONE_BY_ID = "select * from phones where id=?";
+
+    private final static String SELECT_PHONE_BY_MODEL = "select * from phones where model=?";
 
     private final static String SELECT_PHONES_BY_OFFSET_AND_LIMIT = "select * from phones offset ? limit ?";
 
@@ -116,6 +119,21 @@ public class JdbcPhoneDao implements PhoneDao {
     public void decreaseStockQuantity(Long phoneId, Long quantity) {
         long actualStock = getInStockQuantity(phoneId) - quantity;
         jdbcTemplate.update(UPDATE_STOCK_QUANTITY, actualStock, phoneId);
+    }
+
+    @Override
+    public Optional<Phone> findPhoneByModel(String model) {
+        Optional<Phone> phone;
+        try {
+            phone = Optional.ofNullable(
+                    jdbcTemplate.queryForObject(SELECT_PHONE_BY_MODEL,
+                            BeanPropertyRowMapper.newInstance(Phone.class), model));
+            phone.ifPresent(this::setPhoneColors);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
+        return phone;
     }
 
     private void setPhoneColors(Phone phone) {

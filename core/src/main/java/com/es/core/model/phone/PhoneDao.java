@@ -17,4 +17,6 @@ public interface PhoneDao {
     long getQuantityOfPhonesInStock(String query);
 
     void decreaseStockQuantity(Long phoneId, Long quantity);
+
+    Optional<Phone> findPhoneByModel(String model);
 }
